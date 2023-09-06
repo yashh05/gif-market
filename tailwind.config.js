@@ -7,6 +7,8 @@ module.exports = {
   ],
   theme: {
     extend: {
+      opacity: ["hover"],
+      scale: ["hover", "active", "group-hover"],
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic':
