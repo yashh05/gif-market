@@ -1,53 +1,83 @@
 import { useEffect, useState } from "react";
 import UserContext from "./userState";
-import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signOut,
+} from "firebase/auth";
 import { auth } from "@/firebaseConfig";
 
-const UserState=(props)=>{
+const UserState = (props) => {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [signupError, setSignupError] = useState("");
 
-    const [user, setUser] = useState(null)
-    const [loading ,setLoading] = useState(true)
-
-
-    useEffect(()=>{
-        const unsubscribe=onAuthStateChanged(auth,(user)=>{
-           if(user){
-            setUser({
-                uid:user.uid,
-                email:user.email,
-                displayName:user.displayName
-            })
-           }else{
-            setUser(null)
-           }
-        })
-          setLoading(false)
-        return ()=>unsubscribe()
-    },[])
-
-    const signup=async (email,password)=>{
-        console.log(email , password);
-        const new_user= await createUserWithEmailAndPassword(auth,email,password)
-        console.log(new_user);
-        return new_user
-    }
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (Newuser) => {
+      console.log("onAuthStateChanged", Newuser?.uid ?? null );
+  
+      if (Newuser) {
+        console.log("User is authenticated:", Newuser.uid);
+        const temp={uid: Newuser.uid,email: Newuser.email,displayName: Newuser.displayName};
+        setUser(temp);
+        console.log(user);
+        setSignupError("");
+      } else {
+        console.log("User is not authenticated.");
+        setUser(null);
+      }
+    });
+  
+    setLoading(false);
     
-    const login=(email,password)=>{
-        return signInWithEmailAndPassword(auth,email,password)
-    }
-    
-    const logout= async ()=>{
-        console.log("logout");
-    setUser(null)
-    await signOut(auth)
-    }
-    
+    return () => {
+      unsubscribe();
+    };
+  }, []);
 
-    return (
-        <UserContext.Provider value={{user,signup,login,logout}} >
-            {props.children}
-        </UserContext.Provider>
-    )
-}
+  const signup = async (email, password) => {
+    
+    const pr=new Promise((resolve,reject)=>{
+      const details= createUserWithEmailAndPassword(auth, email, password);
+      details.then(detail=>{
+       resolve(detail);
+      })
+      .catch(err=>{
+       reject(err);
+      })
+     })
 
+     return pr;
+
+  }
+
+  const login = async (email, password) => {
+    
+    const pr=new Promise((resolve,reject)=>{
+       const details= signInWithEmailAndPassword(auth, email, password);
+       details.then(detail=>{
+        resolve(detail);
+       })
+       .catch(err=>{
+        reject(err);
+       })
+      })
+
+      return pr;
+    }
+
+  const logout = async () => {
+    console.log("logout");
+    setUser(null);
+    await signOut(auth);
+    window.location.replace("/");
+  };
+
+  return (
+    <UserContext.Provider value={{ user,loading, signup,signupError, login, logout }}>
+      {props.children}
+    </UserContext.Provider>
+  );
+  }
 export default UserState;

@@ -1,4 +1,4 @@
-const Paginate = props => {
+const Paginate = (props) => {
   const pageNumbers = [];
 
   for (let i = 1; i <= Math.ceil(props.totalItems / props.itemsPerPage); i++) {
@@ -8,13 +8,16 @@ const Paginate = props => {
   return (
     <nav className="flex justify-center mt-10">
       <ul className="flex gap-2">
-        {pageNumbers.map(number => {
-
+        {pageNumbers.map((number) => {
           return (
             <li>
               <button
                 onClick={() => props.pageSelected(number)}
-                className={` text-white border-2 p-2 border-white ${props.currentPage===number ? "bg-white text-black":""}`}
+                className={`  border-2 p-2 border-white ${
+                  props.currentPage === number
+                    ? "bg-white text-black"
+                    : "text-white"
+                }`}
               >
                 {number}
               </button>
