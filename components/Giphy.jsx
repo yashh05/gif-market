@@ -1,20 +1,7 @@
-import React, { useContext, useEffect, useState } from "react";
-import axios from "axios";
-import Loader from "./Loader";
+import React, { useState } from "react";
 import { useDebounce } from "use-debounce";
 import Paginate from "./Paginate";
-import Link from "next/link";
-import userContext from "@/context/user/userState";
-import {
-  addDoc,
-  collection,
-  doc,
-  getDoc,
-  query,
-  setDoc,
-  updateDoc,
-  where,
-} from "firebase/firestore";
+
 
 import { db } from "@/firebaseConfig";
 import RenderGif from "./RenderGif";

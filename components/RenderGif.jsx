@@ -13,7 +13,6 @@ function RenderGif(props) {
     const indexOfLastItem = props.currentPage * props.itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - props.itemsPerPage;
     const currentItems = props.data.slice(indexOfFirstItem, indexOfLastItem);
-    console.log(currentItems);
     useEffect(()=>{
 
         const fetchGifs=async ()=>{
@@ -28,7 +27,6 @@ function RenderGif(props) {
             });
         
             props.setData(result.data.data);
-            console.log(props.data);
             setLoading(false);
         }
 
@@ -71,10 +69,10 @@ function RenderGif(props) {
         }
         return currentItems.map((el) => {
           return (
-            <div className="group relative" key={el.id}
+            <div className="group relative w-48" key={el.id}
             >
               <div
-                className="hover:opacity-25 transition ease-in-out delay-150 "
+                className="hover:opacity-25 my-auto transition ease-in-out delay-150 "
               >
                 <img src={el.images.fixed_height.url} />
               </div>
@@ -92,7 +90,7 @@ function RenderGif(props) {
 
 
   return (
-    <div className='flex flex-wrap m-auto justify-center'>
+    <div className='flex flex-wrap m-auto gap-5 justify-center'>
        {rendergifs()}
     </div>
   )
